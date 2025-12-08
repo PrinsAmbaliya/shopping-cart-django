@@ -1,0 +1,61 @@
+{% extends "shop/basic.html" %}
+
+{% block title %} Prodview {% endblock %}
+
+{% block body %}  
+    <div class="container my-4">
+    <div class="row">
+    <div class="col-md-4">
+    <div class="row">
+       <img src="/media//{{product.image}}">
+    </div>
+        </div>
+    <div class="col-md-8">
+        <h5>{{product.product_name}}</h5>
+        <b><p>Rs.{{product.price}}</p></b>
+        <p>{{product.desc}}</p>
+    </div>
+        </div>
+</div>
+{% endblock %}  
+
+
+{% block js %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+  if (localStorage.getItem("cart") == null) {
+    var cart = {};
+  } else {
+    var cart = JSON.parse(localStorage.getItem("cart"));
+    document.getElementById("cart").innerHTML = Object.keys(cart).length;
+  }
+
+  $(".cart").click(function () {
+    var idstr = this.dataset.id;
+
+    if (cart[idstr] !== undefined) {
+      cart[idstr] += 1;
+    } else {
+      cart[idstr] = 1;
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    document.getElementById("cart").innerHTML = Object.keys(cart).length;
+  });
+
+  const pop = new bootstrap.Popover(document.getElementById("popcart"), {
+    html: true,
+    trigger: "hover",
+    placement: "bottom",
+  });
+
+  document
+    .getElementById("popcart")
+    .setAttribute(
+      "data-bs-content",
+      "<h6>Cart for your items in my shopping cart</h6>"
+    );
+</script>
+
+{% endblock %}

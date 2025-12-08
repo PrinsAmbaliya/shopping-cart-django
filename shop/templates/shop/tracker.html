@@ -1,0 +1,151 @@
+{% extends 'shop/basic.html' %} {% block title %} My Awesome Cart
+Tracker{%endblock %} {% block body %}
+<div class="container">
+  <div class="col my-4">
+    <h2>Enter Your Order Id and Email address to track your order</h2>
+
+    <form
+      method="post"
+      action="javascript:void(0)"
+      id="trackerForm"
+      class="row g-3"
+    >
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="orderId">Order Id</label>
+          <input
+            type="text"
+            class="form-control"
+            id="orderId"
+            name="orderId"
+            placeholder="Order Id"
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            placeholder="Email"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary my-3">Track Order</button>
+      </div>
+    </form>
+  </div>
+
+  <hr/>
+
+  <div class="col my-4" id="productsSection" style="display: none">
+    <h2>Your Ordered Products:</h2>
+    <div class="my-3 bg-light border rounded" id="productDetails">
+      <p>Please enter your Order Id and Email above.</p>
+    </div>
+  </div>
+
+  <div class="col my-4" id="statusSection" style="display: none">
+    <h2>Your Order Status :</h2>
+    <div class="my-4">
+      <ul class="list-group" id="items"></ul>
+    </div>
+  </div>
+</div>
+{% endblock %} {%block js%}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  $("#trackerForm").submit(function (event) {
+    event.preventDefault();
+
+    $("#productsSection").show();
+    $("#statusSection").show();
+
+    $("#items").empty();
+    $("#productDetails").html("<p>Loading order details...</p>");
+
+    var formData = {
+      orderId: $("input[name=orderId]").val(),
+      email: $("input[name=email]").val(),
+      csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+    };
+
+    $.ajax({
+      type: "POST",
+      url: "/shop/tracker/",
+      data: formData,
+      encode: true,
+    }).done(function (data) {
+      console.log(data);
+
+      try {
+        let responseData = JSON.parse(data);
+        let updates = responseData[0];
+        let itemJsonString = responseData[1];
+        let totalItems = 0;
+
+        if (Array.isArray(updates) && updates.length > 0) {
+          for (let i = 0; i < updates.length; i++) {
+            let text = updates[i]["text"];
+            let time = updates[i]["time"];
+
+            let mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                            ${text}
+                            <span class="badge bg-primary rounded-pill">${time}</span>
+                        </li>`;
+            $("#items").append(mystr);
+          }
+        } else {
+          let mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                            Sorry, We are not able to fetch this order id and email. Make sure to type correct order Id and email
+                        </li>`;
+          $("#items").append(mystr);
+          $("#productDetails").html(
+            '<p class="text-danger">Order not found.</p>'
+          );
+          return;
+        }
+
+        if (itemJsonString) {
+          let orderedItems = JSON.parse(itemJsonString);
+          let productHtml = `<ul class="list-group">`;
+
+          for (let id in orderedItems) {
+            let item = orderedItems[id];
+
+            productHtml += `
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                  ${item.name}
+                  <span class="badge bg-primary rounded-pill">${item.qty} Qty</span>
+              </li>`;
+            totalItems += item.qty;
+          }
+
+          productHtml += `
+              <li class="list-group-item d-flex justify-content-between align-items-center bg-info bg-opacity-10">
+                  Total Items Ordered
+                  <span class="badge bg-primary rounded-pill">${totalItems} Items</span>
+              </li>`;
+
+          productHtml += `</ul>`;
+          $("#productDetails").html(productHtml);
+        } else {
+          $("#productDetails").html(
+            '<p class="text-warning">No product details available.</p>'
+          );
+        }
+      } catch (e) {
+        let mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                            An error occurred while processing the order data.
+                        </li>`;
+        $("#items").append(mystr);
+        $("#productDetails").html(
+          '<p class="text-danger">Error fetching details.</p>'
+        );
+        console.error("Parsing Error:", e);
+      }
+    });
+  });
+</script>
+{%endblock%}
