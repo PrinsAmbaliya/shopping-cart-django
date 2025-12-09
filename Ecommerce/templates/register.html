@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bootstrap demo</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h3>Rigister Form</h3>
+      <form method="post" id="registerForm">
+        {% csrf_token %}
+        <div class="col-md-6">
+          <label for="validationCustom01" class="form-label">First name</label>
+          <input
+            type="text"
+            class="form-control"
+            name = "firstname"
+            id="validationCustom01"
+            placeholder="Enter Your First Name"
+            required
+          />
+        </div>
+        <div class="col-md-6">
+          <label for="validationCustom02" class="form-label">Last name</label>
+          <input
+            type="text"
+            class="form-control"
+            name="lastname"
+            id="validationCustom02"
+            placeholder="Enter Your Last Name"
+            required
+          />
+        </div>
+
+        <div class="col-md-6">
+          <label for="inputEmail4" class="form-label">Email</label>
+          <input
+            type="email"
+            name="email"
+            class="form-control"
+            id="inputEmail4"
+            placeholder="Enter Your Email"
+            required
+          />
+        </div>
+
+        <div class="col-md-6">
+          <label for="inputPassword1" class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            name="password"
+            id="inputPassword1"
+            placeholder="Enter Your Password"
+            required
+          />
+          <small class="text-muted">
+            Must be 8+ chars, contain uppercase, lowercase, number & special
+            char
+          </small>
+        </div>
+        <div class="col-md-6">
+          <label for="inputPassword2" class="form-label"
+            >Confirm Password</label
+          >
+          <input
+            type="password"
+            class="form-control"
+            id="inputPassword2"
+            placeholder="Enter Your Password agin!"
+            required
+          />
+          <small id="confirmHelp" class="text-danger"></small>
+        </div>
+        <button type="submit" name="submit" class="btn btn-success mt-3">
+          Register
+        </button>
+        <a href="login/" name="Login" class="btn btn-primary mt-3">Login</a>
+      </form>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+      var password = document.getElementById("inputPassword1");
+      var confirmPassword = document.getElementById("inputPassword2");
+      var confirmHelp = document.getElementById("confirmHelp");
+
+      function validatePassword() {
+        var pw = password.value;
+        var valid = true;
+        var msg = "";
+
+        if (pw.length < 8) valid = false;
+        if (!/[A-Z]/.test(pw)) valid = false;
+        if (!/[a-z]/.test(pw)) valid = false;
+        if (!/\d/.test(pw)) valid = false;
+        if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pw)) valid = false;
+
+        if (pw !== confirmPassword.value) {
+          confirmHelp.innerText = "Passwords do not match!";
+          valid = false;
+        } else if (confirmPassword.value !== "") {
+          confirmHelp.innerText = "";
+        }
+
+        return valid;
+      }
+
+      password.addEventListener("input", validatePassword);
+      confirmPassword.addEventListener("input", validatePassword);
+
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", function (e) {
+          if (!validatePassword()) {
+            e.preventDefault();
+            confirmHelp.innerText =
+              "Password must be 8+ chars with uppercase, lowercase, number & special char!";
+          }
+        });
+    </script>
+  </body>
+</html>
