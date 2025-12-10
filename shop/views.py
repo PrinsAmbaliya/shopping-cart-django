@@ -1,11 +1,16 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from . models import Product,Contact,Orders,OrderUpdate
+from . serializers import ProductSerializer
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+import json
+from rest_framework import status
 from math import ceil
 import json
 
 # Create your views here.
-
 def index(request):
     allProds = []
     catprods = Product.objects.values('category','id')
@@ -17,6 +22,20 @@ def index(request):
         allProds.append([prod,range(1,nSlides),nSlides])
     params = {'allProds':allProds}
     return render(request,"shop/index.html",params)
+
+@csrf_exempt
+@api_view(['POST'])
+def indexpost(request):
+    serializer = ProductSerializer(data=request.data)
+    if serializer.is_valid():
+        try:
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        except Exception as e:
+            return JsonResponse({"error":f"{str(e)}"}, status=500)
+    else:
+        return JsonResponse(serializer.errors, status=400)
+    
 
 def about(request):
     return render(request,"shop/about.html")

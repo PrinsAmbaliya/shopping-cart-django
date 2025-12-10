@@ -29,8 +29,10 @@ urlpatterns = [
     path("",views.register,name="Register"),
     path("", lambda request: redirect('/register/')),
     path("login/",views.login_view,name="Login"),
+    path("api/loginpost",views.api_login_viewpost,name="api_Loginpost"),
     path("api/registerget", views.api_registerget, name="api_registerget"),
     path("api/registerpost", views.api_registerpost, name="api_registerpost"),
-    path("api/registerpatch", views.api_registerpatch, name="api_registerpatch"),
-    path("api/{user_id}/registerput", views.api_registerput, name="api_registerput"),
+    path("api/<int:user_id>/registerpatch", views.api_registerpatch, name="api_registerpatch"),
+    path("api/<int:user_id>/registerput", views.api_registerput, name="api_registerput"),
+    path("api/<int:user_id>/registerdelete", views.api_registerdelete, name="api_registerdelete"),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
