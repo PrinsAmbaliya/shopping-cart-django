@@ -19,8 +19,15 @@
         {% csrf_token %}
 
         <div class="col-md-6">
-          <label class="form-label">Email</label>
-          <input type="email" name="email" class="form-control" placeholder="Enter Your Email" required />
+          <label for="validationCustom01" class="form-label">User name</label>
+          <input
+            type="text"
+            class="form-control"
+            name="username"
+            id="validationCustom01"
+            placeholder="Enter Your User Name"
+            required
+          />
         </div>
 
         <div class="col-md-6">
@@ -36,12 +43,12 @@
 
         <button type="submit" class="btn btn-success mt-3">Login</button>
         <a href="/" class="btn btn-primary mt-3">Register</a>
-        {% if messages %} {% for msg in messages %}
-        <p style="color: red">{{ msg }}</p>
+        {% if messages %} {% for i in messages %}
+        <p style="color: red">{{ i }}</p>
         {% endfor %} {% endif %}
       </form>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-  </body>   
+  </body>
 </html>

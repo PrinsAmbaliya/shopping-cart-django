@@ -1,16 +1,19 @@
-"""
-ASGI config for Ecommerce project.
+# Ecommerce/admin.py
 
-It exposes the ASGI callable as a module-level variable named ``application``.
+from django.contrib import admin
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin # <--- Make sure this is imported
 
-For more information on this file, see
-https://docs.djangoproject.com/en/5.2/howto/deployment/asgi/
-"""
+# 1. Unregister the default UserAdmin
+admin.site.unregister(User)
 
-import os
+# 2. Define your custom UserAdmin class
+class CustomUserAdmin(UserAdmin):
+    # 'id' is added here!
+    list_display = (
+        'id', 'username', 'email', 'first_name', 'last_name', 
+        'is_staff', 'is_active', 'date_joined'
+    )
 
-from django.core.asgi import get_asgi_application
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Ecommerce.settings')
-
-application = get_asgi_application()
+# 3. Re-register the User model with your custom admin class
+admin.site.register(User, CustomUserAdmin)

@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.shortcuts import redirect
 from . import views
 
 
@@ -26,5 +27,10 @@ urlpatterns = [
     path("shop/",include("shop.urls")),
     path("blog/",include("blog.urls")),
     path("",views.register,name="Register"),
-    path("login/",views.login_view,name="Login")
+    path("", lambda request: redirect('/register/')),
+    path("login/",views.login_view,name="Login"),
+    path("api/registerget", views.api_registerget, name="api_registerget"),
+    path("api/registerpost", views.api_registerpost, name="api_registerpost"),
+    path("api/registerpatch", views.api_registerpatch, name="api_registerpatch"),
+    path("api/{user_id}/registerput", views.api_registerput, name="api_registerput"),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
