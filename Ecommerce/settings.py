@@ -127,4 +127,6 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+# Source - https://stackoverflow.com/q
+# Posted by Alex Lord Mordor, modified by community. See post 'Timeline' for change history
+# Retrieved 2025-12-10, License - CC BY-SA 3.0

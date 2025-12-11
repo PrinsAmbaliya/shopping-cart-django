@@ -1,16 +1,19 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from . models import Product,Contact,Orders,OrderUpdate
-from . serializers import ProductSerializer
+from . serializers import ProductSerializer, ContactSerializer, OrdersSerializer, OrderUpdateSerializer
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view
-import json
-from rest_framework import status
 from math import ceil
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import BasicAuthentication
 import json
 
 # Create your views here.
+    
 def index(request):
     allProds = []
     catprods = Product.objects.values('category','id')
@@ -23,22 +26,21 @@ def index(request):
     params = {'allProds':allProds}
     return render(request,"shop/index.html",params)
 
-@csrf_exempt
-@api_view(['POST'])
-def indexpost(request):
-    serializer = ProductSerializer(data=request.data)
-    if serializer.is_valid():
-        try:
+class ProductCreateAPI(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+    authentication_classes = []   
+    def post(self,request,*args,**kwargs):
+        serializer = ProductSerializer(data=request.data)
+        
+        if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=201)
-        except Exception as e:
-            return JsonResponse({"error":f"{str(e)}"}, status=500)
-    else:
-        return JsonResponse(serializer.errors, status=400)
-    
+        else:
+            return JsonResponse(serializer.errors, status=400)
 
 def about(request):
     return render(request,"shop/about.html")
+    
 
 def contact(request):
         if request.method=="POST":
@@ -51,7 +53,17 @@ def contact(request):
             return render(request,"shop/contact.html",{"submit":True,"name":name})
         return render(request,"shop/contact.html")
 
-
+class ContactCreatAPI(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+    authentication_classes = []
+    def post(self,request,*args, **kwargs):
+        serializer = ContactSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        else:
+            return JsonResponse(serializer.errors, status=400)
+        
 def tracker(request):
     if request.method=="POST":
         orderId = request.POST.get('orderId','')
@@ -97,6 +109,28 @@ def searchMatch(query,item):
 def productview(request,myid):
     product = Product.objects.filter(id=myid)
     return render(request,"shop/prodview.html",{'product':product[0]})
+
+class OrdersCreatAPI(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+    authentication_classes = []
+    def post(self,request,*args, **kwargs):
+        serializer = OrdersSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        else:
+            return JsonResponse(serializer.errors, status=400)    
+    
+class OrderUpdateCreatAPI(APIView):
+    parser_classes = [MultiPartParser,FormParser]
+    authentication_classes = []
+    def post(self,request,*args, **kwargs):
+        serializer = OrderUpdateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data,status=201)
+        else:
+            return JsonResponse(serializer.errors,status=400)
 
 def checkout(request):
     if request.method=="POST":
