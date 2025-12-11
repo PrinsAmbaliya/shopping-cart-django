@@ -20,6 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import redirect
 from . import views
+from . views import UserRegistrationAPI, UserLoginCreateAPI
 
 
 urlpatterns = [
@@ -27,12 +28,11 @@ urlpatterns = [
     path("shop/",include("shop.urls")),
     path("blog/",include("blog.urls")),
     path("",views.register,name="Register"),
-    path("", lambda request: redirect('/register/')),
     path("login/",views.login_view,name="Login"),
-    path("api/loginpost",views.api_login_viewpost,name="api_Loginpost"),
-    path("api/registerget", views.api_registerget, name="api_registerget"),
-    path("api/registerpost", views.api_registerpost, name="api_registerpost"),
-    path("api/<int:user_id>/registerpatch", views.api_registerpatch, name="api_registerpatch"),
-    path("api/<int:user_id>/registerput", views.api_registerput, name="api_registerput"),
-    path("api/<int:user_id>/registerdelete", views.api_registerdelete, name="api_registerdelete"),
+    path("api/loginpost",UserLoginCreateAPI.as_view(),name="api_Loginpost"),
+    path("api/registerget", UserRegistrationAPI.as_view(), name="api_registerget"),
+    path("api/registerpost", UserRegistrationAPI.as_view(), name="api_registerpost"),
+    path("api/<int:user_id>/registerpatch", UserRegistrationAPI.as_view(), name="api_registerpatch"),
+    path("api/<int:user_id>/registerput", UserRegistrationAPI.as_view(), name="api_registerput"),
+    path("api/<int:user_id>/registerdelete", UserRegistrationAPI.as_view(),name="api_registerdelete"),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
