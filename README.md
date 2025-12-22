@@ -35,27 +35,38 @@ Key features:
 - **Authentication**: Django's built-in auth system
 
 ## Project Structure
+```base
 shopping-cart-django/
 ├── Ecommerce/                  # Project settings and configuration
+│   ├── __init__.py
+│   ├── asgi.py
 │   ├── settings.py
 │   ├── urls.py
 │   └── wsgi.py
 ├── shop/                       # Main e-commerce app
-│   ├── migrations/
-│   ├── templates/shop/         # Shop templates
-│   ├── static/shop/            # CSS, JS, images
+│   ├── __init__.py
 │   ├── admin.py
+│   ├── apps.py
 │   ├── models.py               # Product, Category, Order, etc.
+│   ├── tests.py
 │   ├── views.py                # Product list, detail, cart, checkout
-│   └── urls.py
+│   ├── urls.py
+│   ├── migrations/             # Database migration files
+│   ├── static/shop/            # CSS, JS, images for shop app
+│   └── templates/shop/         # Shop-specific templates
 ├── blog/                       # Blog application
-│   ├── migrations/
-│   ├── templates/blog/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
 │   ├── models.py               # Post model
+│   ├── tests.py
 │   ├── views.py
-│   └── urls.py
+│   ├── urls.py
+│   ├── migrations/             # Database migration files
+│   └── templates/blog/         # Blog-specific templates
 ├── media/                      # Uploaded product images
-├── static/                     # Global static files
-├── templates/                  # Base templates
-├── manage.py
-└── db.sqlite3                  # Development database
+├── static/                     # Global static files (CSS, JS, images)
+├── templates/                  # Base and global templates
+├── manage.py                   # Django management script
+├── db.sqlite3                  # Development database
+└── README.md                   # This file
