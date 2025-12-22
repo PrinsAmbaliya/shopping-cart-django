@@ -70,3 +70,71 @@ shopping-cart-django/
 ├── manage.py                   # Django management script
 ├── db.sqlite3                  # Development database
 └── README.md                   # This file
+```
+
+---
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/PrinsAmbaliya/shopping-cart-django.git
+   cd shopping-cart-django
+   ```
+2. Create and activate a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate    # On Windows: venv\Scripts\activate
+   ```
+3. Install dependencies:
+   ```bash
+   pip install django pillow
+   ```
+4. Apply migrations:
+   ```bash
+   python manage.py migrate
+   ```
+5. Create a superuser (for admin access):
+   ```bash
+   python manage.py createsuperuser
+   ```
+6. Run the development server:
+   ```bash
+   Run the development server:
+   ```
+7. Open your browser and go to:
+   - Shop: http://127.0.0.1:8000/
+   - Admin: http://127.0.0.1:8000/admin/
+
+---
+
+## Usage
+
+### Admin Panel
+
+- Log in at /admin/ with the superuser account
+- Add categories and products (upload images via the admin)
+- Manage orders and blog posts
+
+### Shopping
+
+- Browse products on the homepage
+- Click on a product to view details
+- Add items to cart and adjust quantities
+- Proceed to cart page to review and update
+- Go to checkout to simulate order placement
+
+### Blog
+
+- View blog posts at /blog/
+- Create new posts via admin
+
+---
+
+## Author
+
+Prins Ambaliya
+
+GitHub: PrinsAmbaliya
+
+LinkedIn: https://www.linkedin.com/in/prins-ambaliya-bb7546367
